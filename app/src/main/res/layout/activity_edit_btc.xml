@@ -14,20 +14,9 @@
         android:layout_height="wrap_content"
         android:inputType="numberDecimal"
         android:ems="10"
-        android:id="@+id/editText"
+        android:id="@+id/textField"
         android:layout_alignParentTop="true"
         android:layout_alignParentLeft="true"
         android:textColor="#ffffff"/>
 
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Done"
-        android:id="@+id/button"
-        android:layout_below="@+id/editText"
-        android:layout_alignRight="@+id/editText"
-        android:layout_alignEnd="@+id/editText"
-        android:layout_marginTop="10dp"
-        android:textColor="#80ffffff"
-        android:background="@drawable/simple_button" />
 </RelativeLayout>

@@ -55,7 +55,16 @@ public class MainActivity extends Activity {
                 startActivity(intent);
             }
         });
+    }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        updateInterface();
+        refresh();
+    }
+
+    protected void refresh() {
         if (isNetworkAvailable()) {
             mUpdating = true;
             GetConversionTask task = new GetConversionTask();
@@ -64,8 +73,6 @@ public class MainActivity extends Activity {
         else {
             Toast.makeText(this, "Network is unavailable.", Toast.LENGTH_LONG).show();
         }
-
-        updateInterface();
     }
 
     protected void updateInterface() {
@@ -110,13 +117,6 @@ public class MainActivity extends Activity {
     protected double getBtc() {
         SharedPreferences preferences = getSharedPreferences(PREFERENCES_NAME, Context.MODE_PRIVATE);
         return Double.longBitsToDouble(preferences.getLong(KEY_BTC, Double.doubleToLongBits(2.0)));
-    }
-
-    protected void setBtc(double number) {
-        SharedPreferences preferences = getSharedPreferences(PREFERENCES_NAME, Context.MODE_PRIVATE);
-        SharedPreferences.Editor editor = preferences.edit();
-        editor.putLong(KEY_BTC, Double.doubleToRawLongBits(number));
-        editor.commit();
     }
 
     protected double getRate() {
