@@ -33,11 +33,6 @@ import java.util.TimerTask;
 public class MainActivity extends Activity {
 
     public static final String TAG = MainActivity.class.getSimpleName();
-    public static final String PREFERENCES_NAME = "Preferences";
-    public static final String CONVERSION_PREFERENCES_NAME = "ConversionPreferences";
-    public static final String KEY_BTC = "BTC";
-    public static final String KEY_CURRENCY = "Currency";
-    public static final String KEY_UPDATED_AT = "UpdatedAt";
 
     protected TextView mValueLabel;
     protected TextView mBtcLabel;
@@ -126,8 +121,8 @@ public class MainActivity extends Activity {
     }
 
     protected void updateInterface() {
-        double btc = getBtc();
-        double rate = getRate();
+        double btc = Preferences.getBtc(this);
+        double rate = Preferences.getRate(this);
         double value = btc * rate;
 
         // Value
@@ -147,7 +142,7 @@ public class MainActivity extends Activity {
         if (mUpdating) {
             mUpdatedAtLabel.setText(R.string.updating);
         } else {
-            long timestamp = getUpdatedAtTimestamp();
+            long timestamp = Preferences.getUpdatedAtTimestamp(this);
             if (timestamp == 0) {
                 mUpdatedAtLabel.setText(R.string.updated_never);
             } else {
@@ -169,33 +164,6 @@ public class MainActivity extends Activity {
         return networkInfo != null && networkInfo.isConnected();
     }
 
-    protected String getCurrencyCode() {
-        SharedPreferences preferences = getSharedPreferences(PREFERENCES_NAME, Context.MODE_PRIVATE);
-        return preferences.getString(KEY_CURRENCY, "USD");
-    }
-
-    protected void setCurrencyCode(String code) {
-        SharedPreferences preferences = getSharedPreferences(PREFERENCES_NAME, Context.MODE_PRIVATE);
-        SharedPreferences.Editor editor = preferences.edit();
-        editor.putString(KEY_CURRENCY, code);
-        editor.commit();
-    }
-
-    protected double getBtc() {
-        SharedPreferences preferences = getSharedPreferences(PREFERENCES_NAME, Context.MODE_PRIVATE);
-        return Double.parseDouble(preferences.getString(KEY_BTC, "0"));
-    }
-
-    protected double getRate() {
-        SharedPreferences preferences = getSharedPreferences(CONVERSION_PREFERENCES_NAME, Context.MODE_PRIVATE);
-        return Double.parseDouble(preferences.getString(getCurrencyCode(), "0"));
-    }
-
-    protected long getUpdatedAtTimestamp() {
-        SharedPreferences preferences = getSharedPreferences(CONVERSION_PREFERENCES_NAME, Context.MODE_PRIVATE);
-        return preferences.getLong(KEY_UPDATED_AT, 0);
-    }
-
     public class GetConversionTask extends AsyncTask<Object, Void, Object> {
         @Override
         protected Void doInBackground(Object... arg0) {
@@ -210,7 +178,7 @@ public class MainActivity extends Activity {
                 // Put values into map
                 Iterator<String> keys = data.keys();
 
-                SharedPreferences preferences = getSharedPreferences(CONVERSION_PREFERENCES_NAME, Context.MODE_PRIVATE);
+                SharedPreferences preferences = getSharedPreferences(Preferences.CONVERSION_PREFERENCES_NAME, Context.MODE_PRIVATE);
                 SharedPreferences.Editor editor = preferences.edit();
 
                 while (keys.hasNext()) {
@@ -222,7 +190,7 @@ public class MainActivity extends Activity {
                     }
                 }
 
-                editor.putLong(KEY_UPDATED_AT, System.currentTimeMillis());
+                editor.putLong(Preferences.KEY_UPDATED_AT, System.currentTimeMillis());
                 editor.commit();
             }
             catch (Exception e) {

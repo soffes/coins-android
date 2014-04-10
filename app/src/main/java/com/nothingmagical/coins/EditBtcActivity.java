@@ -1,8 +1,6 @@
 package com.nothingmagical.coins;
 
 import android.app.Activity;
-import android.content.Context;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.KeyEvent;
 import android.view.View;
@@ -23,11 +21,11 @@ public class EditBtcActivity extends Activity {
         setContentView(R.layout.activity_edit_btc);
 
         mTextField = (EditText) findViewById(R.id.textField);
-        mTextField.setText(getBtc());
+        mTextField.setText(Preferences.getBtcString(this));
         mTextField.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView textView, int i, KeyEvent keyEvent) {
-                setBtc(textView.getText().toString());
+                Preferences.setBtc(EditBtcActivity.this, textView.getText().toString());
                 finish();
                 return false;
             }
@@ -39,17 +37,5 @@ public class EditBtcActivity extends Activity {
         super.onResume();
 
         mTextField.requestFocus(View.FOCUS_RIGHT);
-    }
-
-    protected String getBtc() {
-        SharedPreferences preferences = getSharedPreferences(PREFERENCES_NAME, Context.MODE_PRIVATE);
-        return preferences.getString(KEY_BTC, "0");
-    }
-
-    protected void setBtc(String number) {
-        SharedPreferences preferences = getSharedPreferences(PREFERENCES_NAME, Context.MODE_PRIVATE);
-        SharedPreferences.Editor editor = preferences.edit();
-        editor.putString(KEY_BTC, number);
-        editor.commit();
     }
 }
