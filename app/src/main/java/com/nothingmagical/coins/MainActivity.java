@@ -114,7 +114,7 @@ public class MainActivity extends Activity {
             task.execute();
         } else {
             updateInterface();
-            Toast.makeText(this, "Network is unavailable.", Toast.LENGTH_LONG).show();
+            Toast.makeText(this, R.string.no_network, Toast.LENGTH_LONG).show();
         }
     }
 
@@ -138,14 +138,19 @@ public class MainActivity extends Activity {
 
     protected void updateUpdatedAtLabel() {
         if (mUpdating) {
-            mUpdatedAtLabel.setText("Updating…");
+            mUpdatedAtLabel.setText(R.string.updating);
         } else {
             long timestamp = getUpdatedAtTimestamp();
             if (timestamp == 0) {
-                mUpdatedAtLabel.setText("Never updated");
+                mUpdatedAtLabel.setText(R.string.updated_never);
             } else {
                 long now = System.currentTimeMillis();
-                mUpdatedAtLabel.setText("Updated " + DateUtils.getRelativeTimeSpanString(timestamp, now, 0));
+                if (now - timestamp < 11000) {
+                    mUpdatedAtLabel.setText(R.string.updated_just_now);
+                } else {
+                    CharSequence timeAgoInWords = DateUtils.getRelativeTimeSpanString(timestamp, now, 0);
+                    mUpdatedAtLabel.setText(String.format(getString(R.string.updated_format), timeAgoInWords));
+                }
             }
         }
     }
