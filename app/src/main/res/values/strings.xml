@@ -10,5 +10,6 @@
     <string name="updating">Updating…</string>
     <string name="no_network">No Internet connection.</string>
     <string name="updated_format">Updated %s</string>
+    <string name="title_activity_currency_picker">Pick Currency</string>
 
 </resources>

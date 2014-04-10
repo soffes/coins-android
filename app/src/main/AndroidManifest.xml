@@ -24,10 +24,15 @@
             android:name="com.nothingmagical.coins.EditBtcActivity"
             android:label="@string/title_activity_edit_btc"
             android:parentActivityName="com.nothingmagical.coins.MainActivity"
-            android:windowSoftInputMode="stateAlwaysVisible">
+            android:windowSoftInputMode="stateAlwaysVisible" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.nothingmagical.coins.MainActivity" />
+        </activity>
+        <activity
+            android:name="com.nothingmagical.coins.CurrencyPickerActivity"
+            android:parentActivityName="com.nothingmagical.coins.MainActivity"
+            android:label="@string/title_activity_currency_picker" >
         </activity>
     </application>
 

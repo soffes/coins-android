@@ -56,9 +56,15 @@ public class MainActivity extends Activity {
         setContentView(R.layout.activity_main);
 
         mValueLabel = (TextView) findViewById(R.id.valueLabel);
-        mBtcLabel = (TextView) findViewById(R.id.btcLabel);
-        mUpdatedAtLabel = (TextView) findViewById(R.id.updatedAtLabel);
+        mValueLabel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(MainActivity.this, CurrencyPickerActivity.class);
+                startActivity(intent);
+            }
+        });
 
+        mBtcLabel = (TextView) findViewById(R.id.btcLabel);
         mBtcLabel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -67,6 +73,7 @@ public class MainActivity extends Activity {
             }
         });
 
+        mUpdatedAtLabel = (TextView) findViewById(R.id.updatedAtLabel);
         mUpdatedAtLabel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
