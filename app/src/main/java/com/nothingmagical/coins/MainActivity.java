@@ -2,6 +2,7 @@ package com.nothingmagical.coins;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
@@ -9,6 +10,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.format.DateUtils;
 import android.util.Log;
+import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -45,6 +47,14 @@ public class MainActivity extends Activity {
         mValueLabel = (TextView) findViewById(R.id.valueLabel);
         mBtcLabel = (TextView) findViewById(R.id.btcLabel);
         mUpdatedAtLabel = (TextView) findViewById(R.id.updatedAtLabel);
+
+        mBtcLabel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(MainActivity.this, EditBtcActivity.class);
+                startActivity(intent);
+            }
+        });
 
         if (isNetworkAvailable()) {
             mUpdating = true;
