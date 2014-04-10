@@ -17,6 +17,6 @@
         android:id="@+id/textField"
         android:layout_alignParentTop="true"
         android:layout_alignParentLeft="true"
-        android:textColor="#ffffff"/>
+        android:textColor="#ffffff" />
 
 </RelativeLayout>

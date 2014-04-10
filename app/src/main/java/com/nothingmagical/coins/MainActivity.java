@@ -22,6 +22,7 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.text.NumberFormat;
 import java.util.Iterator;
 
 
@@ -55,22 +56,35 @@ public class MainActivity extends Activity {
                 startActivity(intent);
             }
         });
+
+        mUpdatedAtLabel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                refresh();
+            }
+        });
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        updateInterface();
+
         refresh();
     }
 
     protected void refresh() {
+        if (mUpdating) {
+            return;
+        }
+
         if (isNetworkAvailable()) {
             mUpdating = true;
+            updateInterface();
+
             GetConversionTask task = new GetConversionTask();
             task.execute();
-        }
-        else {
+        } else {
+            updateInterface();
             Toast.makeText(this, "Network is unavailable.", Toast.LENGTH_LONG).show();
         }
     }
@@ -80,9 +94,16 @@ public class MainActivity extends Activity {
         double rate = getRate();
         double value = btc * rate;
 
-        mValueLabel.setText(String.format("$%.2f", value));
-        mBtcLabel.setText("" + btc + " BTC");
+        // Value
+        NumberFormat format = NumberFormat.getCurrencyInstance();
+        mValueLabel.setText(format.format(value));
 
+        // BTC
+        format = NumberFormat.getNumberInstance();
+        format.setMaximumFractionDigits(10);
+        mBtcLabel.setText(format.format(btc) + " BTC");
+
+        // Updated at
         if (mUpdating) {
             mUpdatedAtLabel.setText("Updating…");
         } else {
@@ -90,7 +111,8 @@ public class MainActivity extends Activity {
             if (timestamp == 0) {
                 mUpdatedAtLabel.setText("Never updated");
             } else {
-                mUpdatedAtLabel.setText("Updated " + DateUtils.getRelativeTimeSpanString(this, timestamp));
+                long now = System.currentTimeMillis();
+                mUpdatedAtLabel.setText("Updated " + DateUtils.getRelativeTimeSpanString(timestamp, now, 0));
             }
         }
     }
@@ -116,12 +138,12 @@ public class MainActivity extends Activity {
 
     protected double getBtc() {
         SharedPreferences preferences = getSharedPreferences(PREFERENCES_NAME, Context.MODE_PRIVATE);
-        return Double.longBitsToDouble(preferences.getLong(KEY_BTC, Double.doubleToLongBits(2.0)));
+        return Double.parseDouble(preferences.getString(KEY_BTC, "0"));
     }
 
     protected double getRate() {
         SharedPreferences preferences = getSharedPreferences(CONVERSION_PREFERENCES_NAME, Context.MODE_PRIVATE);
-        return Double.longBitsToDouble(preferences.getLong(getCurrencyCode(), Double.doubleToLongBits(0.0)));
+        return Double.parseDouble(preferences.getString(getCurrencyCode(), "0"));
     }
 
     protected long getUpdatedAtTimestamp() {
@@ -151,7 +173,7 @@ public class MainActivity extends Activity {
                     if (key.startsWith("btc_to_")) {
                         String value = data.getString(key);
                         key = key.replace("btc_to_", "").toUpperCase();
-                        editor.putLong(key, Double.doubleToLongBits(Double.valueOf(value)));
+                        editor.putString(key, value);
                     }
                 }
 
