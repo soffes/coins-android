@@ -8,6 +8,8 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.text.format.DateUtils;
 import android.util.Log;
 import android.view.View;
@@ -24,6 +26,8 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.text.NumberFormat;
 import java.util.Iterator;
+import java.util.Timer;
+import java.util.TimerTask;
 
 
 public class MainActivity extends Activity {
@@ -39,6 +43,12 @@ public class MainActivity extends Activity {
     protected TextView mBtcLabel;
     protected TextView mUpdatedAtLabel;
     protected boolean mUpdating;
+    protected Timer mTimer;
+    protected Handler mHandler = new Handler() {
+        public void handleMessage(Message msg) {
+            updateUpdatedAtLabel();
+        }
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -70,6 +80,25 @@ public class MainActivity extends Activity {
         super.onResume();
 
         refresh();
+
+        if (mTimer == null) {
+            mTimer = new Timer();
+            mTimer.schedule(new TimerTask() {
+                @Override
+                public void run() {
+                    mHandler.obtainMessage(1).sendToTarget();
+                }
+            }, 1000, 1000);
+        }
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        if (mTimer != null) {
+            mTimer.cancel();
+            mTimer = null;
+        }
     }
 
     protected void refresh() {
@@ -104,6 +133,10 @@ public class MainActivity extends Activity {
         mBtcLabel.setText(format.format(btc) + " BTC");
 
         // Updated at
+        updateUpdatedAtLabel();
+    }
+
+    protected void updateUpdatedAtLabel() {
         if (mUpdating) {
             mUpdatedAtLabel.setText("Updating…");
         } else {
