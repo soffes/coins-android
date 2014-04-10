@@ -25,6 +25,7 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.text.NumberFormat;
+import java.util.Currency;
 import java.util.Iterator;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -126,7 +127,9 @@ public class MainActivity extends Activity {
         double value = btc * rate;
 
         // Value
+        String code = Preferences.getCurrencyCode(this);
         NumberFormat format = NumberFormat.getCurrencyInstance();
+        format.setCurrency(Currency.getInstance(code));
         mValueLabel.setText(format.format(value));
 
         // BTC
