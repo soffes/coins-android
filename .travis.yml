@@ -1,7 +1,8 @@
 language: android
+before_install:
+ - chmod 777 gradlew
 android:
   components:
     - build-tools-21.0.0
     - android-19
-before_install:
- - chmod 777 gradlew
+
