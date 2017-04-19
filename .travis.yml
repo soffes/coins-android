@@ -1,6 +1,7 @@
 language: android
 before_install:
  - chmod 777 gradlew
+ - chmod 777 gradlew.bat
 android:
   components:
     - build-tools-21.0.0
