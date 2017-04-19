@@ -3,3 +3,4 @@ android:
   components:
     - build-tools-21.0.0
     - android-19
+    - extra
